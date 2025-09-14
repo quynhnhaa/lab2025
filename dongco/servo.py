@@ -40,15 +40,16 @@ def set_angle(angle):
 try:
     print("Điều khiển Servo")
     
-    print("Di chuyển servo đến góc 90 độ...")
-    set_angle(90)
-    time.sleep(1) 
-    
-    
-    print("Quay servo trở lại góc 0 độ...")
-    set_angle(0)
-    time.sleep(1) 
-    
+    while True:
+        print("Di chuyển servo đến góc 90 độ...")
+        set_angle(90)
+        time.sleep(1) 
+        
+        
+        print("Quay servo trở lại góc 0 độ...")
+        set_angle(0)
+        time.sleep(1) 
+        
 
 except KeyboardInterrupt:
     print("\nĐang dọn dẹp và thoát chương trình...")
