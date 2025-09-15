@@ -70,29 +70,29 @@ if __name__ == "__main__":
             set_speed(SLOW_SPEED)
             forward()
             time.sleep(2) # Quay trong 2 giây, sau đó dừng
-            stop() # Dừng động cơ
-            time.sleep(1) # Nghỉ 1 giây
+            # stop() # Dừng động cơ
+            # time.sleep(1) # Nghỉ 1 giây
             
-            # 2. Quay thuận, tốc độ nhanh
-            set_speed(FAST_SPEED)
-            forward()
-            time.sleep(2) # Quay trong 2 giây, sau đó dừng
-            stop() # Dừng động cơ
-            time.sleep(1) # Nghỉ 1 giây
+            # # 2. Quay thuận, tốc độ nhanh
+            # set_speed(FAST_SPEED)
+            # forward()
+            # time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            # stop() # Dừng động cơ
+            # time.sleep(1) # Nghỉ 1 giây
             
-            # 3. Quay ngược, tốc độ chậm và nhanh (tương tự)
-            print("--- Đổi chiều ---")
-            set_speed(SLOW_SPEED)
-            backward()
-            time.sleep(2) # Quay trong 2 giây, sau đó dừng
-            stop() # Dừng động cơ
-            time.sleep(1) # Nghỉ 1 giây
+            # # 3. Quay ngược, tốc độ chậm và nhanh (tương tự)
+            # print("--- Đổi chiều ---")
+            # set_speed(SLOW_SPEED)
+            # backward()
+            # time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            # stop() # Dừng động cơ
+            # time.sleep(1) # Nghỉ 1 giây
             
-            set_speed(FAST_SPEED)
-            backward()
-            time.sleep(2) # Quay trong 2 giây, sau đó dừng
-            stop() # Dừng động cơ
-            time.sleep(1) # Nghỉ 1 giây
+            # set_speed(FAST_SPEED)
+            # backward()
+            # time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            # stop() # Dừng động cơ
+            # time.sleep(1) # Nghỉ 1 giây
 
 
     except KeyboardInterrupt:
