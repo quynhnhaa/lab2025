@@ -4,7 +4,7 @@ import time
 import math
 
 # BCM pins -> chỉnh theo dây của bạn vào ULN2003 IN1..IN4
-IN1, IN2, IN3, IN4 = 17, 18, 27, 22
+IN1, IN2, IN3, IN4 = 14, 15, 18, 23
 
 # Half-step sequence (mượt, mô-men tốt)
 HALF_STEP_SEQ = [

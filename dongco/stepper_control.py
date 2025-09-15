@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import time
 
 # Định nghĩa các chân GPIO kết nối với IN1, IN2, IN3, IN4 của ULN2003
-STEPPER_PINS = [5, 6, 13, 19] # Theo thứ tự IN1, IN2, IN3, IN4
+STEPPER_PINS = [14, 15, 18, 23] # Theo thứ tự IN1, IN2, IN3, IN4
 
 # Thiết lập chế độ chân GPIO
 GPIO.setmode(GPIO.BCM)
