@@ -4,9 +4,9 @@ import RPi.GPIO as GPIO
 import time
 
 
-ENA = 25  # Chân Enable A (điều khiển tốc độ)
-IN1 = 24  # Chân Input 1
-IN2 = 23  # Chân Input 2
+ENA = 21  # Chân Enable A (điều khiển tốc độ)
+IN1 = 20  # Chân Input 1
+IN2 = 16  # Chân Input 2
 
 # Thiết lập chế độ chân GPIO
 GPIO.setmode(GPIO.BCM)
@@ -69,30 +69,30 @@ if __name__ == "__main__":
             # 1. Quay thuận, tốc độ chậm
             set_speed(SLOW_SPEED)
             forward()
-            time.sleep(2) # Quay trong 2 giây
-            stop()
-            time.sleep(1)
+            time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            stop() # Dừng động cơ
+            time.sleep(1) # Nghỉ 1 giây
             
             # 2. Quay thuận, tốc độ nhanh
             set_speed(FAST_SPEED)
             forward()
-            time.sleep(2)
-            stop()
-            time.sleep(1)
+            time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            stop() # Dừng động cơ
+            time.sleep(1) # Nghỉ 1 giây
             
             # 3. Quay ngược, tốc độ chậm và nhanh (tương tự)
             print("--- Đổi chiều ---")
             set_speed(SLOW_SPEED)
             backward()
-            time.sleep(2)
-            stop()
-            time.sleep(1)
+            time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            stop() # Dừng động cơ
+            time.sleep(1) # Nghỉ 1 giây
             
             set_speed(FAST_SPEED)
             backward()
-            time.sleep(2)
-            stop()
-            time.sleep(1)
+            time.sleep(2) # Quay trong 2 giây, sau đó dừng
+            stop() # Dừng động cơ
+            time.sleep(1) # Nghỉ 1 giây
 
 
     except KeyboardInterrupt:
