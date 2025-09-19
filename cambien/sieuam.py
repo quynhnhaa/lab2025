@@ -1,11 +1,13 @@
 import RPi.GPIO as GPIO
 import time
+
 trig = 17
 echo = 27
 
 GPIO.setmode (GPIO.BCM)
 GPIO.setup(trig, GPIO.OUT)
 GPIO.setup(echo, GPIO.IN)
+
 def distance():
     GPIO.output (trig, False)
     time.sleep(0.01)
@@ -25,12 +27,11 @@ def distance():
     return dist
 
 try:
-    print("Hello")
+    
     while True:
         d = distance()
-        print("Distance:", d, "cm")
-
-        time.sleep(0.5)
+        # print("Distance:", d, "cm")
+        print(f"Distance: {d:6.2f} cm")
+        time.sleep(2)
 except KeyboardInterrupt:
     GPIO.cleanup()
-print("Hello")
