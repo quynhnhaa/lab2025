@@ -4,7 +4,7 @@ import time
 
 TRIG_PIN = 17
 ECHO_PIN = 18
-
+pulse_start_time = pulse_start_end = 0
 def setup():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(TRIG_PIN, GPIO.OUT)
