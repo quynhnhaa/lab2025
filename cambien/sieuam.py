@@ -62,7 +62,7 @@ def main():
             dist = get_distance()
             if dist != -1: # Chỉ in khoảng cách hợp lệ
                 print(f"Khoảng cách: {dist:.2f} cm")
-            time.sleep(1)
+            # time.sleep(1)
 
     except KeyboardInterrupt:
         # Xử lý khi người dùng nhấn Ctrl+C
