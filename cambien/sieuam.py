@@ -5,7 +5,7 @@ import time
 # Bạn có thể thay đổi các chân GPIO này cho phù hợp với cách nối dây của bạn.
 TRIG_PIN = 17
 ECHO_PIN = 18
-
+pulse_start_time = pulse_end_time = 0
 def setup():
     """Thiết lập các chân GPIO."""
     # Sử dụng chế độ đánh số chân BCM (Broadcom)
@@ -26,13 +26,6 @@ def get_distance():
     GPIO.output(TRIG_PIN, GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(TRIG_PIN, GPIO.LOW)
-
-    # Khởi tạo biến thời gian để tránh lỗi UnboundLocalError
-    pulse_start_time = time.time()
-    pulse_end_time = time.time()
-
-    # Chờ chân ECHO chuyển sang HIGH, ghi lại thời gian bắt đầu
-    # Thêm timeout để tránh vòng lặp vô hạn
     timeout_start = time.time()
     while GPIO.input(ECHO_PIN) == 0:
         pulse_start_time = time.time()
