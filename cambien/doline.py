@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-SENSOR_PIN = 17
+SENSOR_PIN = 17 #(chân số 6 bên trái) 
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(SENSOR_PIN, GPIO.IN)
