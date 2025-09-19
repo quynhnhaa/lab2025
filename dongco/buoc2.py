@@ -4,15 +4,15 @@ import time
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-coil_A_1_pin = 13 # 4 pink. IN_B
-coil_A_2_pin = 26 # 17 orange IN_D
-coil_B_1_pin = 6  # 23 blue. IN_A
-coil_B_2_pin = 19 # 24 yellow. IN_C
+# coil_A_1_pin = 13 # 4 pink. IN_B
+# coil_A_2_pin = 26 # 17 orange IN_D
+# coil_B_1_pin = 6  # 23 blue. IN_A
+# coil_B_2_pin = 19 # 24 yellow. IN_C
 
-IN_A = 6
-IN_B = 13
-IN_C = 19
-IN_D = 26
+IN1 = 6
+IN2 = 13
+IN3 = 19
+IN4 = 26
 
 
 # adjust if different
@@ -29,17 +29,17 @@ Seq = [
     ]
 
 
-GPIO.setup(IN_A, GPIO.OUT)
-GPIO.setup(IN_B, GPIO.OUT)
-GPIO.setup(IN_C, GPIO.OUT)
-GPIO.setup(IN_D, GPIO.OUT)
+GPIO.setup(IN1, GPIO.OUT)
+GPIO.setup(IN2, GPIO.OUT)
+GPIO.setup(IN3, GPIO.OUT)
+GPIO.setup(IN4, GPIO.OUT)
 
 
 def setStep(w1, w2, w3, w4):
-    GPIO.output(IN_B, w1)
-    GPIO.output(IN_D, w2)
-    GPIO.output(IN_A, w3)
-    GPIO.output(IN_C, w4)
+    GPIO.output(IN2, w1)
+    GPIO.output(IN4, w2)
+    GPIO.output(IN1, w3)
+    GPIO.output(IN3, w4)
 
 def forward(delay, steps):
     for i in range(steps):
