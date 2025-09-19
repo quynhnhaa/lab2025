@@ -1,9 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-# Gán chân GPIO (theo BCM)
-TRIG = 17
-ECHO = 18
+TRIG = 23
+ECHO = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(TRIG, GPIO.OUT)
@@ -15,14 +14,19 @@ def distance():
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
 
-    # Đo thời gian ECHO lên cao
-    while GPIO.input(ECHO) == 0:
+    start_time = time.time()
+    stop_time = start_time
+
+    # Chờ ECHO lên cao (timeout 0.02s)
+    timeout = start_time + 0.02
+    while GPIO.input(ECHO) == 0 and time.time() < timeout:
         start_time = time.time()
 
-    while GPIO.input(ECHO) == 1:
+    # Chờ ECHO xuống thấp (timeout 0.02s)
+    timeout = time.time() + 0.02
+    while GPIO.input(ECHO) == 1 and time.time() < timeout:
         stop_time = time.time()
 
-    # Tính khoảng cách (tốc độ âm thanh = 34300 cm/s)
     elapsed = stop_time - start_time
     dist = (elapsed * 34300) / 2
     return dist
