@@ -1,14 +1,19 @@
-import Adafruit_DHT
 import time
+import board
+import adafruit_dht
 
-# Chọn loại cảm biến: DHT11 hoặc DHT22
-SENSOR = Adafruit_DHT.DHT11
-PIN = 4  # GPIO4 (chân số 7 trên Pi header)
+# Chọn loại DHT: DHT11 hoặc DHT22
+dhtDevice = adafruit_dht.DHT22(board.D4)  # GPIO4 (chân số 7)
 
 while True:
-    humidity, temperature = Adafruit_DHT.read_retry(SENSOR, PIN)
-    if humidity is not None and temperature is not None:
-        print("Nhiệt độ = {:.1f}°C  Độ ẩm = {:.1f}%".format(temperature, humidity))
-    else:
-        print("Không đọc được dữ liệu")
+    try:
+        temperature_c = dhtDevice.temperature
+        humidity = dhtDevice.humidity
+        if humidity is not None and temperature_c is not None:
+            print("Nhiệt độ = {:.1f}°C  Độ ẩm = {:.1f}%".format(temperature_c, humidity))
+        else:
+            print("Không đọc được dữ liệu")
+    except RuntimeError as error:
+        # Thư viện này hay bị lỗi đọc tạm thời
+        print(error.args[0])
     time.sleep(2)

@@ -9,9 +9,9 @@ GPIO.setup(SENSOR_PIN, GPIO.IN)
 try:
     while True:
         if GPIO.input(SENSOR_PIN) == 0:
-            print("Line detected (đen)")
+            print("Có vật cản")
         else:
-            print("No line (trắng)")
+            print("Không có vật cản")
         time.sleep(0.1)
 
 except KeyboardInterrupt:
