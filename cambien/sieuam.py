@@ -1,53 +1,52 @@
 import RPi.GPIO as GPIO
 import time
-
-# ---------- PIN CONFIGURATION ----------
-TRIG_PIN = 17
-ECHO_PIN = 27
-last_distance = 0
-
-# ---------- GPIO SETUP ----------
-
+ 
+#GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(TRIG_PIN, GPIO.OUT)
-GPIO.setup(ECHO_PIN, GPIO.IN)
-
-pulse_start_time = 0
-pulse_end_time = 0
-print("Bắt đầu đo... Nhấn Ctrl+C để thoát.")
-
-try:
-    # Vòng lặp chính của chương trình
-    while True:
-
-        # --- Gửi xung trigger ---
-        GPIO.output(TRIG_PIN, GPIO.LOW)
-        time.sleep(2E-6) # 2 micro-giây
-        GPIO.output(TRIG_PIN, GPIO.HIGH)
-        time.sleep(10E-6) # 10 micro-giây
-        GPIO.output(TRIG_PIN, GPIO.LOW)
-
-        while GPIO.input(ECHO_PIN) == 0:
-            pulse_start_time = time.time()
-        while GPIO.input(ECHO_PIN) == 1:
-            pulse_end_time = time.time()
-
-        # --- Tính toán và lọc khoảng cách ---
-        pulse_duration = pulse_end_time - pulse_start_time
-        distance = round(pulse_duration * 17150, 2)
-        
-        if distance > 300 or distance <= 0:
-            distance = last_distance
-        else:
-            last_distance = distance
-        
-        print(f"Khoảng cách: {distance:.2f} cm")
-        time.sleep(1)
-
-except KeyboardInterrupt:
-    print("\nChương trình bị dừng bởi người dùng.")
-
-finally:
-    # Dọn dẹp các thiết lập GPIO trước khi thoát
-    GPIO.cleanup()
-    print("Đã dọn dẹp GPIO.")
+ 
+#set GPIO Pins
+GPIO_TRIGGER = 18
+GPIO_ECHO = 24
+ 
+#set GPIO direction (IN / OUT)
+GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+GPIO.setup(GPIO_ECHO, GPIO.IN)
+ 
+def distance():
+    # set Trigger to HIGH
+    GPIO.output(GPIO_TRIGGER, True)
+ 
+    # set Trigger after 0.01ms to LOW
+    time.sleep(0.00001)
+    GPIO.output(GPIO_TRIGGER, False)
+ 
+    StartTime = time.time()
+    StopTime = time.time()
+ 
+    # save StartTime
+    while GPIO.input(GPIO_ECHO) == 0:
+        StartTime = time.time()
+ 
+    # save time of arrival
+    while GPIO.input(GPIO_ECHO) == 1:
+        StopTime = time.time()
+ 
+    # time difference between start and arrival
+    TimeElapsed = StopTime - StartTime
+    # multiply with the sonic speed (34300 cm/s)
+    # and divide by 2, because there and back
+    distance = (TimeElapsed * 34300) / 2
+ 
+    return distance
+ 
+if __name__ == '__main__':
+    try:
+        while True:
+            dist = distance()
+            print ("Measured Distance = %.1f cm" % dist)
+            time.sleep(1)
+ 
+        # Reset by pressing CTRL + C
+    except KeyboardInterrupt:
+        print("Measurement stopped by User")
+        GPIO.cleanup()
