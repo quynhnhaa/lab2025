@@ -112,7 +112,7 @@ def step_motor(steps, delay=0.001):
 try:
     while True:
         print("Quay thuận 512 bước (180 độ)")
-        step_motor(512)
+        step_motor(520)
         time.sleep(1)
 
         print("Quay ngược 256 bước (90 độ)")
