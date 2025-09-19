@@ -154,7 +154,7 @@ halfstep_seq = [
     [1,0,0,1]
 ]
 
-STEPS_PER_REV = 520  # số half-steps cho 360 độ
+STEPS_PER_REV = 524  # số half-steps cho 360 độ
 
 def step_motor(steps, delay=0.001):
     direction = 1 if steps > 0 else -1
