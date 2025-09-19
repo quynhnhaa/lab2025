@@ -1,42 +1,36 @@
 import RPi.GPIO as GPIO
 import time
+trig = 17
+echo = 27
 
-TRIG = 23
-ECHO = 24
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
-
+GPIO.setmode (GPIO.BCM)
+GPIO.setup(trig, GPIO.OUT)
+GPIO.setup(echo, GPIO.IN)
 def distance():
-    # Phát xung trigger 10us
-    GPIO.output(TRIG, True)
+    GPIO.output (trig, False)
+    time.sleep(0.01)
+
+    GPIO.output(trig, True)
     time.sleep(0.00001)
-    GPIO.output(TRIG, False)
+    GPIO.output(trig, False)
+    
+    pulse_start = pulse_end = 0
+    while GPIO.input(echo) == 0:
+        pulse_start = time.time()
+    while GPIO.input(echo) == 1:
+        pulse_end = time.time()
 
-    start_time = time.time()
-    stop_time = start_time
-
-    # Chờ ECHO lên cao (timeout 0.02s)
-    timeout = start_time + 0.02
-    while GPIO.input(ECHO) == 0 and time.time() < timeout:
-        start_time = time.time()
-
-    # Chờ ECHO xuống thấp (timeout 0.02s)
-    timeout = time.time() + 0.02
-    while GPIO.input(ECHO) == 1 and time.time() < timeout:
-        stop_time = time.time()
-
-    elapsed = stop_time - start_time
-    dist = (elapsed * 34300) / 2
+    duration = pulse_end - pulse_start
+    dist = duration * 34300 / 2
     return dist
 
 try:
+    print("Hello")
     while True:
         d = distance()
-        print("Khoảng cách = %.1f cm" % d)
-        time.sleep(1)
+        print("Distance:", d, "cm")
 
+        time.sleep(0.5)
 except KeyboardInterrupt:
-    print("Dừng đo")
     GPIO.cleanup()
+print("Hello")
