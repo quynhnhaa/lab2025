@@ -10,7 +10,7 @@ IN4 = 26
 
 control_pins = [IN1, IN2, IN3, IN4]
 
-STEPS_PER_REV = 528  # số half-steps cho 360 độ
+STEPS_PER_REV = 532  # số half-steps cho 360 độ
 
 
 for pin in control_pins:
