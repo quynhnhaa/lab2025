@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import time
 
 # Gán chân GPIO (theo BCM)
-TRIG = 23 #(chân số 6 bên trái)  
-ECHO = 24 #(chân số 6 bên phải)
+TRIG = 17 #(chân số 6 bên trái)  
+ECHO = 18 #(chân số 6 bên phải)
 
 TIMEOUT = 0.1
 
