@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-TRIG = 17
-ECHO = 18
+TRIG = 23
+ECHO = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(TRIG, GPIO.OUT)
@@ -14,8 +14,8 @@ def distance():
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
 
-    start_time = stop_time = 0
-    # stop_time = start_time
+    start_time = time.time()
+    stop_time = start_time
 
     # Chờ ECHO lên cao (timeout 0.02s)
     timeout = start_time + 0.02
@@ -35,7 +35,7 @@ try:
     while True:
         d = distance()
         print("Khoảng cách = %.1f cm" % d)
-        # time.sleep(1)
+        time.sleep(1)
 
 except KeyboardInterrupt:
     print("Dừng đo")
