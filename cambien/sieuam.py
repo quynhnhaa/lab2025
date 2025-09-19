@@ -3,8 +3,8 @@ import time
 
 # ---------- PIN CONFIGURATION ----------
 # Bạn có thể thay đổi các chân GPIO này cho phù hợp với cách nối dây của bạn.
-TRIG_PIN = 23
-ECHO_PIN = 24
+TRIG_PIN = 17
+ECHO_PIN = 18
 
 def setup():
     """Thiết lập các chân GPIO."""
