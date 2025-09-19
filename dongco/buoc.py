@@ -111,12 +111,12 @@ def step_motor(steps, delay=0.001):
 
 try:
     while True:
-        print("Quay thuận 2048 bước (1 vòng)")
-        step_motor(520)
+        print("Quay thuận 256 bước (180 độ)")
+        step_motor(256)
         time.sleep(1)
 
-        print("Quay ngược 1024 bước (nửa vòng)")
-        step_motor(-1024)
+        print("Quay ngược 128 bước (90 độ)")
+        step_motor(-128)
         time.sleep(1)
 
 
