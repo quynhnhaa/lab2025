@@ -2,7 +2,6 @@ import time
 import board
 import adafruit_dht
 
-# Chọn loại DHT: DHT11 hoặc DHT22
 dhtDevice = adafruit_dht.DHT11(board.D4)  # GPIO4 (chân số 7)
 
 while True:
