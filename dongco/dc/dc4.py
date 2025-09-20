@@ -38,14 +38,16 @@ try:
         print("Quay thuận chậm (10%)")
         forward(10)
         sleep(2)
-
+        stop()
+        sleep(1)
+        
         print("Tăng tốc (40%)")
         forward(40)
         sleep(2)
 
-        # print("Dừng 1s")
-        # stop()
-        # sleep(1)
+        print("Dừng 1s")
+        stop()
+        sleep(1)
 
         # print("Quay ngược nhanh (80%)")
         # backward(80)
