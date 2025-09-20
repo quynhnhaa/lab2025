@@ -87,10 +87,10 @@ if __name__ == "__main__":
             d = distance()
             print("Khoảng cách = %.1f cm" % d)
             if d > 20:
-                print("Quay thuận 90 độ")
+                # print("Quay thuận 90 độ")
                 rotate_degree(90)
             elif d < 10:
-                print("Quay ngược 60 độ")
+                # print("Quay ngược 60 độ")
                 rotate_degree(-60)
             else:
                 print("Lỗi đo khoảng cách")
