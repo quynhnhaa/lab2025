@@ -84,7 +84,6 @@ if __name__ == "__main__":
             else:
                 set_angle(0)
 
-            time.sleep(1)
 
     except KeyboardInterrupt:
         print("\nĐang dọn dẹp và thoát chương trình...")
