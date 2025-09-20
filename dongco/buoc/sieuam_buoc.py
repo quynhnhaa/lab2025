@@ -85,6 +85,7 @@ if __name__ == "__main__":
     try:
         while True:
             d = distance()
+            print("Khoảng cách = %.1f cm" % d)
             if d > 20:
                 print("Quay thuận 90 độ")
                 rotate_degree(90)
