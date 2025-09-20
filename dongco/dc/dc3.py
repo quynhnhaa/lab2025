@@ -121,20 +121,21 @@ def stop():
     pwm.ChangeDutyCycle(0)
 
 try:
-    print("Forward 50%")
-    forward(50)
-    time.sleep(5)
+    while True:
+        print("Forward 50%")
+        forward(50)
+        time.sleep(5)
 
-    print("Stop")
-    stop()
-    time.sleep(2)
+        print("Stop")
+        stop()
+        time.sleep(2)
 
-    print("Backward 25%")
-    backward(25)
-    time.sleep(5)
+        print("Backward 25%")
+        backward(25)
+        time.sleep(5)
 
-    print("Stop")
-    stop()
+        print("Stop")
+        stop()
 
 except KeyboardInterrupt:
     print("Interrupted by user")
