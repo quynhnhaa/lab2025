@@ -35,24 +35,24 @@ def stop():
 
 try:
     while True:
-        print("Quay thuận chậm (30%)")
-        forward(30)
+        print("Quay thuận chậm (5%)")
+        forward(5)
         sleep(2)
 
-        print("Tăng tốc (70%)")
-        forward(70)
+        print("Tăng tốc (30%)")
+        forward(30)
         sleep(2)
 
         print("Dừng 1s")
         stop()
         sleep(1)
 
-        print("Quay ngược nhanh (80%)")
-        backward(80)
+        print("Quay ngược nhanh (20%)")
+        backward(20)
         sleep(2)
 
-        print("Quay ngược chậm (40%)")
-        backward(40)
+        print("Quay ngược chậm (5%)")
+        backward(5)
         sleep(2)
 
         print("Dừng 1s")
