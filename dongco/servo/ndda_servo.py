@@ -41,17 +41,16 @@ if __name__ == "__main__":
                     print("Nhiệt độ = {:.1f}°C  Độ ẩm = {:.1f}%".format(temperature_c, humidity))
 
                     if temperature_c >= 75:
-                        print("servo quay góc 180 độ")
                         set_angle(180)
-                        time.sleep(0.3)
+                        time.sleep(0.5)
                         set_angle(0)
                     else:
-                        print("servo quay góc 90 độ")
                         set_angle(90)
-                        time.sleep(0.3)
+                        time.sleep(0.5)
                         set_angle(0)
                 else:
                     print("Không đọc được dữ liệu")
+                time.sleep(0.5)
             except RuntimeError as error:
                 # Thư viện này hay bị lỗi đọc tạm thời
                 print(error.args[0])
@@ -62,4 +61,3 @@ if __name__ == "__main__":
     finally:
         pwm.stop()
         GPIO.cleanup()
-        print("Đã dọn dẹp GPIO. Tạm biệt!")
