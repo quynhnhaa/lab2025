@@ -1,59 +1,85 @@
 import RPi.GPIO as GPIO
-import time
+from time import sleep
 
-# Thiết lập chế độ đánh số chân
+in1 = 19
+in2 = 26
+en = 13
+temp1=1
+
+GPIO.setwarnings(False)
+
 GPIO.setmode(GPIO.BCM)
+GPIO.setup(in1,GPIO.OUT)
+GPIO.setup(in2,GPIO.OUT)
+GPIO.setup(en,GPIO.OUT)
+GPIO.output(in1,GPIO.LOW)
+GPIO.output(in2,GPIO.LOW)
 
-# Khai báo chân
-ENA = 13
-IN1 = 19
-IN2 = 26
+p=GPIO.PWM(en,1000)
+p.start(25)
+print("\n")
+print("The default speed & direction of motor is LOW & Forward.....")
+print("r-run s-stop f-forward b-backward l-low m-medium h-high e-exit")
+print("\n")
+
+while(1):
+
+    x=input()
+
+    if x=='r':
+        print("run")
+        if(temp1==1):
+         GPIO.output(in1,GPIO.HIGH)
+         GPIO.output(in2,GPIO.LOW)
+         print("forward")
+         x='z'
+        else:
+         GPIO.output(in1,GPIO.LOW)
+         GPIO.output(in2,GPIO.HIGH)
+         print("backward")
+         x='z'
 
 
-# Thiết lập chân là output
-GPIO.setup(IN1, GPIO.OUT)
-GPIO.setup(IN2, GPIO.OUT)
-GPIO.setup(ENA, GPIO.OUT)
+    elif x=='s':
+        print("stop")
+        GPIO.output(in1,GPIO.LOW)
+        GPIO.output(in2,GPIO.LOW)
+        x='z'
 
-# Tạo PWM trên chân ENA với tần số 1000Hz
-pwm = GPIO.PWM(ENA, 1000)
-pwm.start(0)  # Bắt đầu với duty cycle = 0
+    elif x=='f':
+        print("forward")
+        GPIO.output(in1,GPIO.HIGH)
+        GPIO.output(in2,GPIO.LOW)
+        temp1=1
+        x='z'
 
-def forward(speed):
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    pwm.ChangeDutyCycle(speed)
+    elif x=='b':
+        print("backward")
+        GPIO.output(in1,GPIO.LOW)
+        GPIO.output(in2,GPIO.HIGH)
+        temp1=0
+        x='z'
 
-def backward(speed):
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.HIGH)
-    pwm.ChangeDutyCycle(speed)
+    elif x=='l':
+        print("low")
+        p.ChangeDutyCycle(25)
+        x='z'
 
-def stop():
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.LOW)
-    pwm.ChangeDutyCycle(0)
+    elif x=='m':
+        print("medium")
+        p.ChangeDutyCycle(50)
+        x='z'
 
-try:
-    while True:
-        print("Forward 30%")
-        forward(50)
-        time.sleep(5)
+    elif x=='h':
+        print("high")
+        p.ChangeDutyCycle(75)
+        x='z'
 
-        print("Stop")
-        stop()
-        time.sleep(2)
 
-        print("Backward 30%")
-        backward(100)
-        time.sleep(5)
+    elif x=='e':
+        GPIO.cleanup()
+        break
 
-        print("Stop")
-        stop()
-
-except KeyboardInterrupt:
-    print("Interrupted by user")
-
-finally:
-    pwm.stop()
-    GPIO.cleanup()
+    else:
+        print("<<<  wrong data  >>>")
+        print("please enter the defined data to continue.....")
