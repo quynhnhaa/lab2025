@@ -62,8 +62,8 @@ if __name__ == "__main__":
         print("Chương trình điều khiển động cơ DC.")
         print("Bắt đầu chuỗi hành động tự động. Nhấn Ctrl+C để thoát.")
 
-        SLOW_SPEED = 2
-        FAST_SPEED = 8
+        SLOW_SPEED = 0.2
+        FAST_SPEED = 1
 
         while True:
             # 1. Quay thuận, tốc độ chậm
