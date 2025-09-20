@@ -39,12 +39,12 @@ def rotate_degree(degree, delay=0.001):
 if __name__ == "__main__":
     try:
         while True:
-            print("Quay thuận 524 bước (360 độ)")
-            rotate_degree(90)
+            print("Quay thuận 60 độ ")
+            rotate_degree(60)
             time.sleep(1)
 
-            print("Quay ngược 262 bước (180 độ)")
-            rotate_degree(-45)
+            print("Quay ngược 90 độ")
+            rotate_degree(-90)
             time.sleep(1)
 
 
