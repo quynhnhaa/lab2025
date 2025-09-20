@@ -42,11 +42,11 @@ if __name__ == "__main__":
 
                     if humidity >= 75:
                         set_angle(180)
-                        time.sleep(0.5)
+                        time.sleep(0.6)
                         set_angle(0)
                     else:
                         set_angle(90)
-                        time.sleep(0.5)
+                        time.sleep(0.6)
                         set_angle(0)
                 else:
                     print("Không đọc được dữ liệu")
