@@ -2,10 +2,12 @@ import RPi.GPIO as GPIO
 import time
 
 
-SERVO_PIN = 18
+SERVO_PIN = 18 # chân số 6 bên phải
+SENSOR_PIN = 17 # chân số 6 bên trái
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(SERVO_PIN, GPIO.OUT)
+GPIO.setup(SENSOR_PIN, GPIO.IN)
 
 # Tạo đối tượng PWM với tần số 50Hz
 pwm = GPIO.PWM(SERVO_PIN, 50) 
@@ -32,13 +34,19 @@ try:
     print("Điều khiển Servo")
     
     while True:
-        print("Di chuyển servo đến góc 90 độ...")
-        set_angle(90)
-        time.sleep(0.5) 
-        
-        print("Quay servo trở lại góc 0 độ...")
-        set_angle(0)
-        # time.sleep(1) 
+        if GPIO.input(SENSOR_PIN) == 0:
+            print("Line trắng, servo quay góc 90 độ")
+
+            set_angle(90)
+            time.sleep(0.5)
+            set_angle(0)
+            time.sleep(0.5)
+        else:
+            print("Line đen, servo quay góc 180 độ")
+            set_angle(180)
+            time.sleep(0.5)
+            set_angle(0)
+            time.sleep(0.5)
         
 
 except KeyboardInterrupt:
