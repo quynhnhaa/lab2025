@@ -1,11 +1,15 @@
 import RPi.GPIO as GPIO
 import time
+import board
+import adafruit_dht
 
 GPIO.setmode(GPIO.BCM)
 
 control_pins = [6, 13, 19, 26]  # IN1, IN2, IN3, IN4 (lần lượt là 4 chân gần cuối bên trái)
 STEPS_PER_REV = 532  # số half-steps cho 360 độ
 
+
+dhtDevice = adafruit_dht.DHT11(board.D4)  # GPIO4 (chân số 4 bên trái)
 
 for pin in control_pins:
     GPIO.setup(pin, GPIO.OUT)
@@ -39,21 +43,26 @@ def rotate_degree(degree, delay=0.001):
 if __name__ == "__main__":
     try:
         while True:
-            print("Quay thuận 524 bước (360 độ)")
-            rotate_degree(90)
-            time.sleep(1)
+            try:
+                temperature_c = dhtDevice.temperature
+                humidity = dhtDevice.humidity
+                if humidity is not None and temperature_c is not None:
+                    print("Nhiệt độ = {:.1f}°C  Độ ẩm = {:.1f}%".format(temperature_c, humidity))
+                    if humidity > 80:
+                        print("Quay ngược 90 độ")
+                        rotate_degree(-90)
+                    else:
+                        print("Quay thuận 90 độ")
+                        rotate_degree(90)
 
-            print("Quay ngược 262 bước (180 độ)")
-            rotate_degree(-45)
-            time.sleep(1)
-
-
+                else:
+                    print("Không đọc được dữ liệu")
+            except RuntimeError as error:
+                # Thư viện này hay bị lỗi đọc tạm thời
+                print(error.args[0])
 
     except KeyboardInterrupt:
-        print("Dừng bởi người dùng")
-        print("Dừng động cơ")
         for pin in control_pins:
             GPIO.output(pin, 0)
-
     finally:
         GPIO.cleanup()

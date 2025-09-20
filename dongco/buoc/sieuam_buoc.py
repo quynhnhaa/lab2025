@@ -90,7 +90,6 @@ if __name__ == "__main__":
                 # print("Quay ngược 60 độ")
                 rotate_degree(60)
             else:
-                print("Không quay")
                 rotate_degree(0)
             time.sleep(1)
 

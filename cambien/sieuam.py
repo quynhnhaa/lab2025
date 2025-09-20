@@ -43,9 +43,6 @@ def distance():
     elapsed = stop_time - start_time
     dist = (elapsed * 34300) / 2
     
-    if dist < 2 or dist > 400:
-        return -1  # Trả về giá trị lỗi nếu ngoài phạm vi
-    
     return dist
 
 try:
