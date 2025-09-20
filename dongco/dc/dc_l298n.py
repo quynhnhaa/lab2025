@@ -1,108 +1,70 @@
-import RPi.GPIO as GPIO
-import time
+import pigpio
+from time import sleep
 
-# Thiết lập chế độ đánh số chân GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)  # Tắt cảnh báo GPIO
+# --- Khai báo chân ---
+ENA = 17   # PWM
+IN1 = 27   # Điều khiển chiều
+IN2 = 22   # Điều khiển chiều
 
-# Khai báo chân kết nối với module L298N
-ENA = 17  # Chân Enable A (điều khiển tốc độ động cơ A)
-IN1 = 27  # Chân Input 1 cho động cơ A
-IN2 = 22  # Chân Input 2 cho động cơ A
+# --- Khởi tạo pigpio ---
+pi = pigpio.pi()
+if not pi.connected:
+    exit("Không kết nối được pigpio daemon. Hãy chạy: sudo systemctl start pigpiod")
 
-# Thiết lập chân là output
-GPIO.setup(ENA, GPIO.OUT)
-GPIO.setup(IN1, GPIO.OUT)
-GPIO.setup(IN2, GPIO.OUT)
+# Đặt mode cho các chân
+pi.set_mode(ENA, pigpio.OUTPUT)
+pi.set_mode(IN1, pigpio.OUTPUT)
+pi.set_mode(IN2, pigpio.OUTPUT)
 
-# Tạo đối tượng PWM trên chân ENA với tần số 100Hz (thích hợp cho động cơ DC)
-pwm = GPIO.PWM(ENA, 100)
-pwm.start(0)  # Bắt đầu với duty cycle = 0 (tốc độ 0)
+# Đặt tần số PWM cho ENA (ví dụ 1kHz)
+pi.set_PWM_frequency(ENA, 1000)
 
 def forward(speed):
-    """
-    Quay động cơ theo chiều thuận với tốc độ được chỉ định.
-    :param speed: Tốc độ từ 0 (dừng) đến 100 (tối đa).
-    """
-    if speed < 0:
-        speed = 0
-    elif speed > 100:
-        speed = 100
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    pwm.ChangeDutyCycle(speed)
-    print(f"Động cơ quay thuận với tốc độ {speed}%")
+    """Quay thuận với tốc độ (0-100%)"""
+    pi.write(IN1, 1)
+    pi.write(IN2, 0)
+    pi.set_PWM_dutycycle(ENA, int(speed * 255 / 100))  # scale 0-100 → 0-255
 
 def backward(speed):
-    """
-    Quay động cơ theo chiều ngược với tốc độ được chỉ định.
-    :param speed: Tốc độ từ 0 (dừng) đến 100 (tối đa).
-    """
-    if speed < 0:
-        speed = 0
-    elif speed > 100:
-        speed = 100
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.HIGH)
-    pwm.ChangeDutyCycle(speed)
-    print(f"Động cơ quay ngược với tốc độ {speed}%")
+    """Quay ngược với tốc độ (0-100%)"""
+    pi.write(IN1, 0)
+    pi.write(IN2, 1)
+    pi.set_PWM_dutycycle(ENA, int(speed * 255 / 100))
 
 def stop():
-    """
-    Dừng động cơ.
-    """
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.LOW)
-    pwm.ChangeDutyCycle(0)
-    print("Động cơ dừng")
+    """Dừng motor"""
+    pi.set_PWM_dutycycle(ENA, 0)
+    pi.write(IN1, 0)
+    pi.write(IN2, 0)
 
-def cleanup():
-    """
-    Dọn dẹp GPIO trước khi thoát chương trình.
-    """
-    pwm.stop()
-    GPIO.cleanup()
-    print("Đã dọn dẹp GPIO")
+try:
+    while True:
+        print("Quay thuận chậm (30%)")
+        forward(30)
+        sleep(2)
 
-if __name__ == "__main__":
-    try:
-        print("Chương trình điều khiển động cơ DC với module L298N")
-        print("Nhấn Ctrl+C để dừng")
+        print("Tăng tốc (70%)")
+        forward(70)
+        sleep(2)
 
-        while True:
-            # Quay thuận với tốc độ chậm (50%)
-            forward(50)
-            time.sleep(3)
+        print("Dừng 1s")
+        stop()
+        sleep(1)
 
-            # Dừng động cơ
-            stop()
-            time.sleep(1)
+        print("Quay ngược nhanh (80%)")
+        backward(80)
+        sleep(2)
 
-            # Quay thuận với tốc độ nhanh (100%)
-            forward(100)
-            time.sleep(3)
+        print("Quay ngược chậm (40%)")
+        backward(40)
+        sleep(2)
 
-            # Dừng động cơ
-            stop()
-            time.sleep(1)
+        print("Dừng 1s")
+        stop()
+        sleep(1)
 
-            # Quay ngược với tốc độ chậm (50%)
-            backward(50)
-            time.sleep(3)
-
-            # Dừng động cơ
-            stop()
-            time.sleep(1)
-
-            # Quay ngược với tốc độ nhanh (100%)
-            backward(100)
-            time.sleep(3)
-
-            # Dừng động cơ
-            stop()
-            time.sleep(2)  # Nghỉ lâu hơn để lặp lại
-
-    except KeyboardInterrupt:
-        print("\nĐã nhấn Ctrl+C, dừng chương trình")
-    finally:
-        cleanup()
+except KeyboardInterrupt:
+    print("Kết thúc bởi người dùng")
+finally:
+    stop()
+    pi.stop()
