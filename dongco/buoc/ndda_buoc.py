@@ -57,6 +57,7 @@ if __name__ == "__main__":
 
                 else:
                     print("Không đọc được dữ liệu")
+                time.sleep(1)
             except RuntimeError as error:
                 # Thư viện này hay bị lỗi đọc tạm thời
                 print(error.args[0])
