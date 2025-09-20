@@ -40,13 +40,13 @@ try:
             set_angle(90)
             time.sleep(0.5)
             set_angle(0)
-            time.sleep(0.5)
+            # time.sleep(0.5)
         else:
             print("Line đen, servo quay góc 180 độ")
             set_angle(180)
             time.sleep(0.5)
             set_angle(0)
-            time.sleep(0.5)
+            # time.sleep(0.5)
         
 
 except KeyboardInterrupt:
