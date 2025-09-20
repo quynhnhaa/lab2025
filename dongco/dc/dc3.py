@@ -1,32 +1,34 @@
-# Include the library files
 import RPi.GPIO as GPIO
 from time import sleep
 
-# Include the motor control pins
-ENA = 17
-IN1 = 27
-IN2 = 22
+ENA, IN1, IN2 = 17, 27, 22
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-GPIO.setup(ENA,GPIO.OUT)
-GPIO.setup(IN1,GPIO.OUT)
-GPIO.setup(IN2,GPIO.OUT)
+GPIO.setup(ENA, GPIO.OUT)
+GPIO.setup(IN1, GPIO.OUT)
+GPIO.setup(IN2, GPIO.OUT)
 
+# PWM để điều khiển tốc độ (1kHz)
+pwm = GPIO.PWM(ENA, 1000)
+pwm.start(100)  # 100% duty = full speed
 
 def forward():
-    GPIO.output(ENA,GPIO.HIGH)
-    GPIO.output(IN1,GPIO.HIGH)
-    GPIO.output(IN2,GPIO.LOW)
-
+    GPIO.output(IN1, GPIO.HIGH)
+    GPIO.output(IN2, GPIO.LOW)
 
 def backward():
-    GPIO.output(ENA,GPIO.HIGH)
-    GPIO.output(IN1,GPIO.LOW)
-    GPIO.output(IN2,GPIO.HIGH)
+    GPIO.output(IN1, GPIO.LOW)
+    GPIO.output(IN2, GPIO.HIGH)
 
-while True:
-    forward()
-    sleep(1)
-    backward()
-    sleep(1)
+try:
+    while True:
+        forward()
+        sleep(1)
+        backward()
+        sleep(1)
+except KeyboardInterrupt:
+    pass
+finally:
+    pwm.stop()
+    GPIO.cleanup()
