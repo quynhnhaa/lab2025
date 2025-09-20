@@ -3,6 +3,7 @@ import time
 
 # Thiết lập chế độ đánh số chân GPIO
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)  # Tắt cảnh báo GPIO
 
 # Khai báo chân kết nối với module L298N
 ENA = 17  # Chân Enable A (điều khiển tốc độ động cơ A)
@@ -14,8 +15,8 @@ GPIO.setup(ENA, GPIO.OUT)
 GPIO.setup(IN1, GPIO.OUT)
 GPIO.setup(IN2, GPIO.OUT)
 
-# Tạo đối tượng PWM trên chân ENA với tần số 1000Hz
-pwm = GPIO.PWM(ENA, 1000)
+# Tạo đối tượng PWM trên chân ENA với tần số 100Hz (thích hợp cho động cơ DC)
+pwm = GPIO.PWM(ENA, 100)
 pwm.start(0)  # Bắt đầu với duty cycle = 0 (tốc độ 0)
 
 def forward(speed):
@@ -69,32 +70,32 @@ if __name__ == "__main__":
         print("Nhấn Ctrl+C để dừng")
 
         while True:
-            # Quay thuận với tốc độ chậm (30%)
-            forward(30)
+            # Quay thuận với tốc độ chậm (50%)
+            forward(50)
             time.sleep(3)
 
             # Dừng động cơ
             stop()
             time.sleep(1)
 
-            # Quay thuận với tốc độ nhanh (80%)
-            forward(80)
+            # Quay thuận với tốc độ nhanh (100%)
+            forward(100)
             time.sleep(3)
 
             # Dừng động cơ
             stop()
             time.sleep(1)
 
-            # Quay ngược với tốc độ chậm (30%)
-            backward(30)
+            # Quay ngược với tốc độ chậm (50%)
+            backward(50)
             time.sleep(3)
 
             # Dừng động cơ
             stop()
             time.sleep(1)
 
-            # Quay ngược với tốc độ nhanh (80%)
-            backward(80)
+            # Quay ngược với tốc độ nhanh (100%)
+            backward(100)
             time.sleep(3)
 
             # Dừng động cơ
