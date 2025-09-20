@@ -37,19 +37,17 @@ if __name__ == "__main__":
             try:
                 # temperature_c = dhtDevice.temperature
                 humidity = dhtDevice.humidity
-                if humidity is not None:
-                    print("Độ ẩm = {:.1f}%".format(humidity))
+                print("Độ ẩm = {:.1f}%".format(humidity))
 
-                    if humidity >= 75:
-                        set_angle(180)
-                        time.sleep(0.6)
-                        set_angle(0)
-                    else:
-                        set_angle(90)
-                        time.sleep(0.6)
-                        set_angle(0)
+                if humidity >= 75:
+                    set_angle(180)
+                    time.sleep(0.5)
+                    set_angle(0)
                 else:
-                    print("Không đọc được dữ liệu")
+                    set_angle(90)
+                    time.sleep(0.5)
+                    set_angle(0)
+
 
             except RuntimeError as error:
                 # Thư viện này hay bị lỗi đọc tạm thời
