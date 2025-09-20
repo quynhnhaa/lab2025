@@ -123,7 +123,7 @@ def stop():
 try:
     while True:
         print("Forward 50%")
-        forward(50)
+        forward(30)
         time.sleep(5)
 
         print("Stop")
