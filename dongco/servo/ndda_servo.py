@@ -43,12 +43,12 @@ if __name__ == "__main__":
                     if temperature_c >= 75:
                         print("servo quay góc 180 độ")
                         set_angle(180)
-                        time.sleep(0.5)
+                        time.sleep(0.3)
                         set_angle(0)
                     else:
                         print("servo quay góc 90 độ")
                         set_angle(90)
-                        time.sleep(0.5)
+                        time.sleep(0.3)
                         set_angle(0)
                 else:
                     print("Không đọc được dữ liệu")
