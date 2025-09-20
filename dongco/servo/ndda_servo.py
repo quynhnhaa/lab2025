@@ -37,10 +37,10 @@ if __name__ == "__main__":
             try:
                 temperature_c = dhtDevice.temperature
                 humidity = dhtDevice.humidity
-                if humidity is not None and temperature_c is not None:
+                if humidity is not None:
                     print("Nhiệt độ = {:.1f}°C  Độ ẩm = {:.1f}%".format(temperature_c, humidity))
 
-                    if temperature_c >= 75:
+                    if humidity >= 75:
                         set_angle(180)
                         time.sleep(0.5)
                         set_angle(0)
