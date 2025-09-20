@@ -88,10 +88,10 @@ if __name__ == "__main__":
             print("Khoảng cách = %.1f cm" % d)
             if d > 20:
                 # print("Quay thuận 90 độ")
-                rotate_degree(90)
+                rotate_degree(60)
             elif d < 10:
                 # print("Quay ngược 60 độ")
-                rotate_degree(-60)
+                rotate_degree(-90)
             else:
                 print("Lỗi đo khoảng cách")
             time.sleep(1)
