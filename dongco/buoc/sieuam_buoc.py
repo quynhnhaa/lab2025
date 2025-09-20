@@ -75,9 +75,6 @@ def distance():
     elapsed = stop_time - start_time
     dist = (elapsed * 34300) / 2
     
-    if dist < 2 or dist > 400:
-        return -1  # Trả về giá trị lỗi nếu ngoài phạm vi
-    
     return dist
 
 
@@ -86,14 +83,15 @@ if __name__ == "__main__":
         while True:
             d = distance()
             print("Khoảng cách = %.1f cm" % d)
-            if d > 20:
+            if d < 10:
                 # print("Quay thuận 90 độ")
-                rotate_degree(60)
-            elif d < 10:
-                # print("Quay ngược 60 độ")
                 rotate_degree(-90)
+            elif 10 <= d <= 20:
+                # print("Quay ngược 60 độ")
+                rotate_degree(60)
             else:
-                print("Lỗi đo khoảng cách")
+                print("Không quay")
+                rotate_degree(0)
             time.sleep(1)
 
     except KeyboardInterrupt:
