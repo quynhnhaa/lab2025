@@ -35,29 +35,29 @@ def stop():
 
 try:
     while True:
-        print("Quay thuận chậm (30%)")
-        forward(30)
+        print("Quay thuận chậm (10%)")
+        forward(10)
         sleep(2)
 
-        print("Tăng tốc (70%)")
-        forward(70)
+        print("Tăng tốc (40%)")
+        forward(40)
         sleep(2)
 
-        print("Dừng 1s")
-        stop()
-        sleep(1)
+        # print("Dừng 1s")
+        # stop()
+        # sleep(1)
 
-        print("Quay ngược nhanh (80%)")
-        backward(80)
-        sleep(2)
+        # print("Quay ngược nhanh (80%)")
+        # backward(80)
+        # sleep(2)
 
-        print("Quay ngược chậm (40%)")
-        backward(40)
-        sleep(2)
+        # print("Quay ngược chậm (40%)")
+        # backward(40)
+        # sleep(2)
 
-        print("Dừng 1s")
-        stop()
-        sleep(1)
+        # print("Dừng 1s")
+        # stop()
+        # sleep(1)
 
 except KeyboardInterrupt:
     print("Kết thúc bởi người dùng")
