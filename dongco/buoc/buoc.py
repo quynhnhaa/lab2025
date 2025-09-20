@@ -42,23 +42,24 @@ def rotate_degree(degree, delay=0.001):
     steps = int(degree * STEPS_PER_REV / 360)
     step_motor(steps, delay)
 
-try:
-    while True:
-        print("Quay thuận 524 bước (360 độ)")
-        rotate_degree(90)
-        time.sleep(1)
+if __name__ == "__main__":
+    try:
+        while True:
+            print("Quay thuận 524 bước (360 độ)")
+            rotate_degree(90)
+            time.sleep(1)
 
-        print("Quay ngược 262 bước (180 độ)")
-        rotate_degree(-45)
-        time.sleep(1)
+            print("Quay ngược 262 bước (180 độ)")
+            rotate_degree(-45)
+            time.sleep(1)
 
 
 
-except KeyboardInterrupt:
-    print("Dừng bởi người dùng")
-    print("Dừng động cơ")
-    for pin in control_pins:
-        GPIO.output(pin, 0)
+    except KeyboardInterrupt:
+        print("Dừng bởi người dùng")
+        print("Dừng động cơ")
+        for pin in control_pins:
+            GPIO.output(pin, 0)
 
-finally:
-    GPIO.cleanup()
+    finally:
+        GPIO.cleanup()
