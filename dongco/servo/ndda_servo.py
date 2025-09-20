@@ -50,7 +50,6 @@ if __name__ == "__main__":
                         set_angle(0)
                 else:
                     print("Không đọc được dữ liệu")
-                time.sleep(0.5)
             except RuntimeError as error:
                 # Thư viện này hay bị lỗi đọc tạm thời
                 print(error.args[0])
