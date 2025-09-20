@@ -29,30 +29,28 @@ def set_angle(angle):
     pwm.ChangeDutyCycle(duty_cycle)
     time.sleep(0.5)
     pwm.ChangeDutyCycle(0)
-
-try:
-    print("Điều khiển Servo")
-    
-    while True:
-        if GPIO.input(SENSOR_PIN) == 0:
-            print("Line trắng, servo quay góc 90 độ")
-
-            set_angle(90)
-            time.sleep(0.5)
-            set_angle(0)
-            # time.sleep(0.5)
-        else:
-            print("Line đen, servo quay góc 180 độ")
-            set_angle(180)
-            time.sleep(0.5)
-            set_angle(0)
-            # time.sleep(0.5)
+if __name__ == "__main__":
+    try:
+        print("Điều khiển Servo")
         
+        while True:
+            if GPIO.input(SENSOR_PIN) == 0:
+                print("Line trắng, servo quay góc 90 độ")
+                set_angle(90)
+                time.sleep(0.5)
+                set_angle(0)
+            else:
+                print("Line đen, servo quay góc 180 độ")
+                set_angle(180)
+                time.sleep(0.5)
+                set_angle(0)
+                
+            
 
-except KeyboardInterrupt:
-    print("\nĐang dọn dẹp và thoát chương trình...")
+    except KeyboardInterrupt:
+        print("\nĐang dọn dẹp và thoát chương trình...")
 
-finally:
-    pwm.stop()
-    GPIO.cleanup()
-    print("Đã dọn dẹp GPIO. Tạm biệt!")
+    finally:
+        pwm.stop()
+        GPIO.cleanup()
+        print("Đã dọn dẹp GPIO. Tạm biệt!")

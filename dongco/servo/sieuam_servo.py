@@ -2,10 +2,16 @@ import RPi.GPIO as GPIO
 import time
 
 
-SERVO_PIN = 18
+SERVO_PIN = 18 # chân số 6 bên phải
+
+TRIG = 17 # chân số 6 bên trái  
+ECHO = 27 # chân số 7 bên trái
+TIMEOUT = 0.1
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(SERVO_PIN, GPIO.OUT)
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
 
 # Tạo đối tượng PWM với tần số 50Hz
 pwm = GPIO.PWM(SERVO_PIN, 50) 
@@ -28,23 +34,62 @@ def set_angle(angle):
     time.sleep(0.5)
     pwm.ChangeDutyCycle(0)
 
-try:
-    print("Điều khiển Servo")
+def distance():
+    GPIO.output(TRIG, False)
+
+
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG, False)
+
+    start_time = time.time()
+    stop_time = time.time()
+
     
-    while True:
-        print("Di chuyển servo đến góc 90 độ...")
-        set_angle(90)
-        time.sleep(0.5) 
-        
-        print("Quay servo trở lại góc 0 độ...")
-        set_angle(0)
-        # time.sleep(1) 
-        
+    timeout_start = time.time()
+    while GPIO.input(ECHO) == 0:
+        start_time = time.time()
+        # Kiểm tra timeout
+        if start_time - timeout_start > TIMEOUT:
+            print("Lỗi: Timeout khi chờ ECHO lên cao")
+            return -1  
 
-except KeyboardInterrupt:
-    print("\nĐang dọn dẹp và thoát chương trình...")
+    timeout_start = time.time()
+    while GPIO.input(ECHO) == 1:
+        stop_time = time.time()
+        # Kiểm tra timeout
+        if stop_time - timeout_start > TIMEOUT:
+            print("Lỗi: Timeout khi chờ ECHO xuống thấp")
+            return -1 
 
-finally:
-    pwm.stop()
-    GPIO.cleanup()
-    print("Đã dọn dẹp GPIO. Tạm biệt!")
+    
+    elapsed = stop_time - start_time
+    dist = (elapsed * 34300) / 2
+    
+    return dist
+
+if __name__ == "__main__":
+    try:
+        while True:
+            d = distance()
+            print("Khoảng cách = %.1f cm" % d)
+            if d < 10:
+                set_angle(90)
+                time.sleep(0.5)
+                set_angle(0)
+            elif 10 <= d <= 20:
+                set_angle(180)
+                time.sleep(0.5)
+                set_angle(0)
+            else:
+                set_angle(0)
+
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        print("\nĐang dọn dẹp và thoát chương trình...")
+
+    finally:
+        pwm.stop()
+        GPIO.cleanup()
+        print("Đã dọn dẹp GPIO")

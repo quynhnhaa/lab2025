@@ -1,8 +1,11 @@
 import RPi.GPIO as GPIO
 import time
+import board
+import adafruit_dht
 
+dhtDevice = adafruit_dht.DHT11(board.D4)  # GPIO4 (chân số 4 bên trái)
 
-SERVO_PIN = 18
+SERVO_PIN = 18 # chân số 6 bên phải
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(SERVO_PIN, GPIO.OUT)
@@ -28,23 +31,35 @@ def set_angle(angle):
     time.sleep(0.5)
     pwm.ChangeDutyCycle(0)
 
-try:
-    print("Điều khiển Servo")
-    
-    while True:
-        print("Di chuyển servo đến góc 90 độ...")
-        set_angle(90)
-        time.sleep(0.5) 
-        
-        print("Quay servo trở lại góc 0 độ...")
-        set_angle(0)
-        # time.sleep(1) 
-        
+if __name__ == "__main__":
+    try:
+        while True:
+            try:
+                temperature_c = dhtDevice.temperature
+                humidity = dhtDevice.humidity
+                if humidity is not None and temperature_c is not None:
+                    print("Nhiệt độ = {:.1f}°C  Độ ẩm = {:.1f}%".format(temperature_c, humidity))
 
-except KeyboardInterrupt:
-    print("\nĐang dọn dẹp và thoát chương trình...")
+                    if temperature_c >= 75:
+                        print("servo quay góc 180 độ")
+                        set_angle(180)
+                        time.sleep(0.5)
+                        set_angle(0)
+                    else:
+                        print("servo quay góc 90 độ")
+                        set_angle(90)
+                        time.sleep(0.5)
+                        set_angle(0)
+                else:
+                    print("Không đọc được dữ liệu")
+            except RuntimeError as error:
+                # Thư viện này hay bị lỗi đọc tạm thời
+                print(error.args[0])
 
-finally:
-    pwm.stop()
-    GPIO.cleanup()
-    print("Đã dọn dẹp GPIO. Tạm biệt!")
+    except KeyboardInterrupt:
+        print("\nĐang dọn dẹp và thoát chương trình...")
+
+    finally:
+        pwm.stop()
+        GPIO.cleanup()
+        print("Đã dọn dẹp GPIO. Tạm biệt!")
