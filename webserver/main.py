@@ -9,7 +9,7 @@ import threading
 
 GPIO.setmode(GPIO.BCM)
 
-SENSOR_PIN = 17 #(chân số 6 bên trái) 
+SENSOR_PIN = 27 #(chân số 6 bên trái) 
 
 GPIO.setup(SENSOR_PIN, GPIO.IN)
 
