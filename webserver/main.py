@@ -48,7 +48,7 @@ app = Flask(__name__, template_folder="templates")
 
 # --- Global state ---
 sensor_data = {"temperature": None, "humidity": None}
-led_mode = "auto"   # "auto", "mode1", "mode2"
+led_mode = 0
 humidity_threshold = 60
 
 
