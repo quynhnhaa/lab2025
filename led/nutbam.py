@@ -1,42 +1,37 @@
 import gpiod
-import threading
 import time
 
-CHIP = "gpiochip0"   # thường là /dev/gpiochip0
-LINE_BTN = 17        # nút nhấn
-LINE_LED = 27        # LED
+CHIP = "gpiochip0"
+BUTTON_LINE = 16
+LED_LINE = 20
 
+# Mở chip GPIO
 chip = gpiod.Chip(CHIP)
 
-# Lấy line cho nút
-btn = chip.get_line(LINE_BTN)
-btn.request(consumer="nutbam", type=gpiod.LINE_REQ_EV_BOTH_EDGES)
+# Lấy line cho nút và LED
+button = chip.get_line(BUTTON_LINE)
+led = chip.get_line(LED_LINE)
 
-# Lấy line cho LED
-led = chip.get_line(LINE_LED)
-led.request(consumer="nutbam_led", type=gpiod.LINE_REQ_DIR_OUT)
+# Cấu hình LED là output
+led.request(consumer="led", type=gpiod.LINE_REQ_DIR_OUT)
 
-def watcher():
-    while True:
-        if btn.event_wait():  # block tới khi có event
-            ev = btn.event_read()
-            if ev.type == gpiod.LineEvent.RISING_EDGE:
-                print("[EVENT] RISING")
-                led.set_value(1)  # bật LED
-            elif ev.type == gpiod.LineEvent.FALLING_EDGE:
-                print("[EVENT] FALLING")
-                led.set_value(0)  # tắt LED
+# Cấu hình nút là input với ngắt cả RISING và FALLING
+button.request(consumer="button", type=gpiod.LINE_REQ_EV_BOTH_EDGES)
 
-t = threading.Thread(target=watcher, daemon=True)
-t.start()
+print("Đang chờ sự kiện nút...")
 
-print("Chờ nút bấm... Ctrl+C để thoát")
 try:
     while True:
-        time.sleep(1)
+        event = button.event_wait(sec=5)  # Chờ tối đa 5 giây
+        if event:
+            evt = button.event_read()
+            if evt.type == gpiod.LineEvent.FALLING_EDGE:
+                print("Nút được nhấn")
+                led.set_value(1)
+            elif evt.type == gpiod.LineEvent.RISING_EDGE:
+                print("Nút được thả")
+                led.set_value(0)
+        else:
+            print("Không có sự kiện trong 5 giây")
 except KeyboardInterrupt:
-    pass
-finally:
-    btn.release()
-    led.release()
-    chip.close()
+    print("Thoát chương trình")
