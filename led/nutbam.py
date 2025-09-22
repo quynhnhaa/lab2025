@@ -15,23 +15,24 @@ led = chip.get_line(LED_LINE)
 # Cấu hình LED là output
 led.request(consumer="led", type=gpiod.LINE_REQ_DIR_OUT)
 
-# Cấu hình nút là input với ngắt cả RISING và FALLING
-button.request(consumer="button", type=gpiod.LINE_REQ_EV_BOTH_EDGES)
+# Cấu hình nút là input với ngắt FALLING_EDGE (nhấn)
+button.request(consumer="button", type=gpiod.LINE_REQ_EV_FALLING_EDGE)
 
-print("Đang chờ sự kiện nút...")
+# Biến trạng thái LED
+led_state = 0
+led.set_value(led_state)
+
+print("Đang chờ nút nhấn để đổi trạng thái LED...")
 
 try:
     while True:
-        event = button.event_wait(sec=5)  # Chờ tối đa 5 giây
-        if event:
+        if button.event_wait(sec=10):  # Chờ tối đa 10 giây
             evt = button.event_read()
             if evt.type == gpiod.LineEvent.FALLING_EDGE:
-                print("Nút được nhấn")
-                led.set_value(1)
-            elif evt.type == gpiod.LineEvent.RISING_EDGE:
-                print("Nút được thả")
-                led.set_value(0)
+                led_state = 1 - led_state  # Đảo trạng thái
+                led.set_value(led_state)
+                print(f"LED {'bật' if led_state else 'tắt'}")
         else:
-            print("Không có sự kiện trong 5 giây")
+            print("Không có sự kiện trong 10 giây")
 except KeyboardInterrupt:
     print("Thoát chương trình")
