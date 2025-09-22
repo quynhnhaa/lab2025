@@ -6,7 +6,7 @@ import time
 import threading
 
 # --- GPIO setup ---
-LED_PINS = [17, 18, 27, 22]  # 4 LED GPIO pins
+LED_PINS = [14, 15, 27, 22]  # 4 LED GPIO pins
 GPIO.setmode(GPIO.BCM)
 pwms = []
 for pin in LED_PINS:
