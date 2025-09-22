@@ -98,11 +98,11 @@ def get_sensor():
         "mode": led_mode
     })
 
-@app.route("/api/mode/<mode>", methods=["POST"])
+@app.route("/api/mode", methods=["POST"])
 def change_mode(mode):
     global led_mode
     # if mode in ["auto", "mode1", "mode2"]:
-    led_mode = mode
+    led_mode = mode['mode']
     return jsonify({"status": "success", "mode": led_mode})
 
 
