@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 # --- Cấu hình chân ---
-ENA = 17   # Chân PWM điều khiển tốc độ
+ENA = 14   # Chân PWM điều khiển tốc độ
 IN1 = 27   # Chân điều khiển chiều
 IN2 = 22   # Chân điều khiển chiều
 
@@ -49,17 +49,17 @@ try:
         stop()
         sleep(2)
 
-        # print("Quay ngược nhanh (80%)")
-        # backward(80)
-        # sleep(2)
+        print("Quay ngược nhanh (80%)")
+        backward(80)
+        sleep(2)
 
-        # print("Quay ngược chậm (40%)")
-        # backward(40)
-        # sleep(2)
+        print("Quay ngược chậm (40%)")
+        backward(40)
+        sleep(2)
 
-        # print("Dừng 1s")
-        # stop()
-        # sleep(1)
+        print("Dừng 1s")
+        stop()
+        sleep(1)
 
 except KeyboardInterrupt:
     print("Kết thúc bởi người dùng")

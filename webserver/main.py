@@ -16,7 +16,33 @@ for pin in LED_PINS:
     pwms.append(pwm)
 
 # --- DHT setup ---
-dhtDevice = adafruit_dht.DHT11(board.D4)
+SERVO_PIN = 18
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(SERVO_PIN, GPIO.OUT)
+
+# Tạo đối tượng PWM với tần số 50Hz
+pwm = GPIO.PWM(SERVO_PIN, 50) 
+pwm.start(0) 
+
+def set_angle(angle):
+    """
+    Hàm này chuyển đổi góc (0-180) thành duty cycle (2-12) và đặt vị trí cho servo.
+    
+    - Góc 0   độ tương ứng với duty cycle ~2% (xung 1ms trên chu kỳ 20ms)
+    - Góc 90  độ tương ứng với duty cycle ~7% (xung 1.5ms)
+    - Góc 180 độ tương ứng với duty cycle ~12% (xung 2ms)
+    """
+    if angle < 0 or angle > 180:
+        print("Góc phải nằm trong khoảng từ 0 đến 180 độ.")
+        return
+        
+    duty_cycle = (angle / 18.0) + 2
+
+    pwm.ChangeDutyCycle(duty_cycle)
+    time.sleep(0.5)
+    pwm.ChangeDutyCycle(0)
+
 
 # --- Flask ---
 app = Flask(__name__, template_folder="templates")
@@ -24,7 +50,7 @@ app = Flask(__name__, template_folder="templates")
 # --- Global state ---
 sensor_data = {"temperature": None, "humidity": None}
 led_mode = "auto"   # "auto", "mode1", "mode2"
-humidity_threshold = 75
+humidity_threshold = 60
 
 
 # --- Sensor loop ---
@@ -53,50 +79,9 @@ def sensor_loop():
 def led_loop():
     global led_mode, sensor_data
     while True:
-        if led_mode == "auto":
-            hum = sensor_data.get("humidity")
-            if hum is not None:
-                if hum > humidity_threshold:
-                    for pwm in pwms:
-                        pwm.ChangeDutyCycle(100)
-                else:
-                    for pwm in pwms:
-                        pwm.ChangeDutyCycle(0)
-            time.sleep(0.5)
-
-        elif led_mode == "mode1":
-            # Left --> Right
-            for pwm in pwms:
-                pwm.ChangeDutyCycle(0)
-            for i in range(len(pwms)):
-                if led_mode != "mode1": break
-                for j, pwm in enumerate(pwms):
-                    pwm.ChangeDutyCycle(100 if j == i else 0)
-                time.sleep(0.2)
-            # Right --> Left
-            for i in range(len(pwms)-2, 0, -1):
-                if led_mode != "mode1": break
-                for j, pwm in enumerate(pwms):
-                    pwm.ChangeDutyCycle(100 if j == i else 0)
-                time.sleep(0.2)
-
-        elif led_mode == "mode2":
-            # brighten
-            for pwm in pwms:
-                pwm.ChangeDutyCycle(0)
-            for i in range(len(pwms)):
-                if led_mode != "mode2": break
-                for dc in range(0, 101, 5):
-                    pwms[i].ChangeDutyCycle(dc)
-                    time.sleep(0.05)
-            # darkening
-            for i in reversed(range(len(pwms))):
-                if led_mode != "mode2": break
-                for dc in reversed(range(0, 101, 5)):
-                    pwms[i].ChangeDutyCycle(dc)
-                    time.sleep(0.05)
-        else:
-            time.sleep(0.5)
+        set_angle(int(led_mode))
+        time.sleep(0.5) 
+        set_angle(0)
 
 
 # --- Routes ---
@@ -116,10 +101,9 @@ def get_sensor():
 @app.route("/api/mode/<mode>", methods=["POST"])
 def change_mode(mode):
     global led_mode
-    if mode in ["auto", "mode1", "mode2"]:
-        led_mode = mode
-        return jsonify({"status": "success", "mode": led_mode})
-    return jsonify({"status": "error", "msg": "invalid mode"})
+    # if mode in ["auto", "mode1", "mode2"]:
+    led_mode = mode
+    return jsonify({"status": "success", "mode": led_mode})
 
 
 # --- Start threads ---

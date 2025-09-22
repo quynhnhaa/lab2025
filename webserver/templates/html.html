@@ -18,21 +18,17 @@
     .mode1 { background-color: #27ae60; color: white; }
     .mode2 { background-color: #f39c12; color: white; }
     .auto { background-color: #2980b9; color: white; }
+    .angle-input { margin-top: 20px; }
+    input[type=number] { padding: 8px; width: 80px; font-size: 16px; text-align: center; }
+    .send { background-color: #8e44ad; color: white; }
   </style>
 </head>
 <body>
-  <h1>IoT Monitoring: Temperature & Humidity</h1>
-  
-  <div class="sensor">
-    <p><b>Temperature:</b> <span id="temperature">--</span> C</p>
-    <p><b>Humidity:</b> <span id="humidity">--</span> %</p>
-    <p><b>LED Mode:</b> <span id="led-mode">--</span></p>
-  </div>
-
-  <div>
-    <button class="mode1" onclick="setMode('mode1')">Mode 1</button>
-    <button class="mode2" onclick="setMode('mode2')">Mode 2</button>
-    <button class="auto" onclick="setMode('auto')">Auto Mode</button>
+  <h1>IoT Monitoring: Servo</h1>
+  <!-- Nhập góc và gửi -->
+  <div class="angle-input">
+    <input type="number" id="angle" min="0" max="180" placeholder="0-180">
+    <button class="send" onclick="sendAngle()">Send Angle</button>
   </div>
 
   <script>
@@ -59,6 +55,29 @@
         }
       } catch (e) {
         console.error("Error setting mode:", e);
+      }
+    }
+
+    async function sendAngle() {
+      const angle = document.getElementById("angle").value;
+      if (angle < 0 || angle > 180 || angle === "") {
+        alert("Vui lòng nhập số trong khoảng 0 - 180");
+        return;
+      }
+      try {
+        const res = await fetch("/api/mode", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: Number(angle) })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("Gửi thành công: Góc = " + data.angle);
+        } else {
+          alert("Gửi thất bại!");
+        }
+      } catch (e) {
+        console.error("Error sending angle:", e);
       }
     }
 

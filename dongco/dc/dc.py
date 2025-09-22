@@ -66,11 +66,11 @@ if __name__ == "__main__":
         FAST_SPEED = 1
 
         while True:
-            # 1. Quay thuận, tốc độ chậm
+            
             set_speed(SLOW_SPEED)
             forward()
-            time.sleep(2) # Quay trong 2 giây, sau đó dừng
-            stop() # Dừng động cơ
+            time.sleep(2) 
+            stop() 
             time.sleep(1) # Nghỉ 1 giây
             
             # 2. Quay thuận, tốc độ nhanh
