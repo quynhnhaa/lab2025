@@ -108,6 +108,7 @@ def change_mode():
         return jsonify({"status": "error", "message": "Missing 'mode'"}), 400
 
     led_mode = data["mode"]  # có thể là số hoặc chuỗi
+    print(f"[API MODE] Mode changed to: {led_mode}")
     return jsonify({"status": "success", "mode": led_mode})
 
 # --- Start threads ---
