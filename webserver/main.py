@@ -6,14 +6,12 @@ import time
 import threading
 
 # --- GPIO setup ---
-LED_PINS = [17, 15, 27, 22]  # 4 LED GPIO pins
+
 GPIO.setmode(GPIO.BCM)
-pwms = []
-for pin in LED_PINS:
-    GPIO.setup(pin, GPIO.OUT)
-    pwm = GPIO.PWM(pin, 100)  # PWM 100Hz
-    pwm.start(0)
-    pwms.append(pwm)
+
+SENSOR_PIN = 17 #(chân số 6 bên trái) 
+
+GPIO.setup(SENSOR_PIN, GPIO.IN)
 
 # --- DHT setup ---
 SERVO_PIN = 14
@@ -57,18 +55,12 @@ def sensor_loop():
     global sensor_data
     while True:
         try:
-            temp = None
-            hum = None
-            for _ in range(3):
-                try:
-                    temp = dhtDevice.temperature
-                    hum = dhtDevice.humidity
-                    if temp is not None and hum is not None:
-                        break
-                except Exception:
-                    time.sleep(0.2)
-            sensor_data["temperature"] = temp
-            sensor_data["humidity"] = hum
+            if GPIO.input(SENSOR_PIN) == 0:
+                sensor_data["temperature"] = 'trắng'
+            else:
+                sensor_data["temperature"] = 'đen'
+            
+
         except Exception as e:
             print("[SENSOR LOOP] Error:", e)
         time.sleep(1)
