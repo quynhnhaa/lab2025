@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IoT Monitoring - Temperature & Humidity</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
+    h1 { color: #2c3e50; }
+    .sensor { font-size: 22px; margin: 20px 0; }
+    button { 
+      padding: 10px 20px; 
+      margin: 10px; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 16px; 
+    }
+    .mode1 { background-color: #27ae60; color: white; }
+    .mode2 { background-color: #f39c12; color: white; }
+    .auto { background-color: #2980b9; color: white; }
+  </style>
+</head>
+<body>
+  <h1>IoT Monitoring: Temperature & Humidity</h1>
+  
+  <div class="sensor">
+    <p><b>Temperature:</b> <span id="temperature">--</span> C</p>
+    <p><b>Humidity:</b> <span id="humidity">--</span> %</p>
+    <p><b>LED Mode:</b> <span id="led-mode">--</span></p>
+  </div>
+
+  <div>
+    <button class="mode1" onclick="setMode('mode1')">Mode 1</button>
+    <button class="mode2" onclick="setMode('mode2')">Mode 2</button>
+    <button class="auto" onclick="setMode('auto')">Auto Mode</button>
+  </div>
+
+  <script>
+    async function fetchSensor() {
+      try {
+        const res = await fetch("/api/sensor");
+        const data = await res.json();
+        if (data.status === "success") {
+          document.getElementById("temperature").innerText = data.temperature ?? "--";
+          document.getElementById("humidity").innerText = data.humidity ?? "--";
+          document.getElementById("led-mode").innerText = data.mode;
+        }
+      } catch (e) {
+        console.error("Error fetching sensor data:", e);
+      }
+    }
+
+    async function setMode(mode) {
+      try {
+        const res = await fetch("/api/mode/" + mode, { method: "POST" });
+        const data = await res.json();
+        if (data.status === "success") {
+          document.getElementById("led-mode").innerText = data.mode;
+        }
+      } catch (e) {
+        console.error("Error setting mode:", e);
+      }
+    }
+
+    setInterval(fetchSensor, 1000);
+    fetchSensor();
+  </script>
+</body>
+</html>
