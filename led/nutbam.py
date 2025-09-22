@@ -1,35 +1,34 @@
-import lgpio
+import gpiod
+import threading
 import time
 
-BUTTON_PIN = 17   # BCM pin cho nút
-LED_PIN = 27      # BCM pin cho LED
+CHIP = "gpiochip0"   # thường là /dev/gpiochip0
+LINE = 17            # BCM offset — nếu dùng offset khác, hãy dùng gpioinfo để kiểm tra
 
-# Mở chip GPIO (chip số 0)
-chip = lgpio.gpiochip_open(0)
+chip = gpiod.Chip(CHIP)
+line = chip.get_line(LINE)
+# request for both edges
+line.request(consumer="nutbam", type=gpiod.LINE_REQ_EV_BOTH_EDGES)
 
-# Cấu hình chân
-lgpio.gpio_claim_input(chip, BUTTON_PIN)
-lgpio.gpio_claim_output(chip, LED_PIN)
+def watcher():
+    while True:
+        # block until event (None / sec=None -> block indefinitely)
+        if line.event_wait(sec=None):
+            ev = line.event_read()
+            if ev.type == gpiod.LineEvent.RISING_EDGE:
+                print("[EVENT] RISING")
+                # gọi callback / thao tác với LED ở đây
+            else:
+                print("[EVENT] FALLING")
 
-# Hàm callback khi có ngắt
-def button_callback(chip, gpio, level, tick, userdata):
-    print(f"[CALLBACK] GPIO{gpio} Level={level} Tick={tick}")
-    if level == 1:   # Nút nhấn xuống
-        lgpio.gpio_write(chip, LED_PIN, 1)
-    elif level == 0: # Nút nhả ra
-        lgpio.gpio_write(chip, LED_PIN, 0)
+t = threading.Thread(target=watcher, daemon=True)
+t.start()
 
-# Chống dội 200ms
-lgpio.gpio_set_debounce_micros(chip, BUTTON_PIN, 200000)
-
-# Đăng ký ngắt cho cả 2 cạnh
-lgpio.gpio_claim_alert(chip, BUTTON_PIN, lgpio.BOTH_EDGES)
-lgpio.gpio_set_alert_func_ex(chip, BUTTON_PIN, button_callback, None)
-
-print("Chờ nút bấm... (Ctrl+C để thoát)")
 try:
     while True:
-        time.sleep(1)  # callback chạy ngầm khi có ngắt
+        time.sleep(1)
 except KeyboardInterrupt:
-    print("Thoát...")
-    lgpio.gpiochip_close(chip)
+    pass
+finally:
+    line.release()
+    chip.close()
