@@ -98,13 +98,17 @@ def get_sensor():
         "mode": led_mode
     })
 
-@app.route("/api/mode", methods=["POST"])
-def change_mode(mode):
-    global led_mode
-    # if mode in ["auto", "mode1", "mode2"]:
-    led_mode = mode['mode']
-    return jsonify({"status": "success", "mode": led_mode})
+from flask import request, jsonify
 
+@app.route("/api/mode", methods=["POST"])
+def change_mode():
+    global led_mode
+    data = request.get_json()  # lấy JSON từ frontend
+    if not data or "mode" not in data:
+        return jsonify({"status": "error", "message": "Missing 'mode'"}), 400
+
+    led_mode = data["mode"]  # có thể là số hoặc chuỗi
+    return jsonify({"status": "success", "mode": led_mode})
 
 # --- Start threads ---
 threading.Thread(target=sensor_loop, daemon=True).start()
